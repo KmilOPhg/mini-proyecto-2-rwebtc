@@ -121,3 +121,16 @@ El servidor imprime logs con prefijos de color:
 |---|---|
 | `master` | Producción — solo el propietario puede hacer push |
 | `dev` | Desarrollo — colaboradores trabajan aquí |
+
+### Protección de ramas (ejecutar una vez)
+
+Requiere [GitHub CLI](https://cli.github.com/) autenticado como `KmilOPhg`:
+
+```powershell
+gh auth login
+.\scripts\setup-branch-protection.ps1
+```
+
+Esto configura:
+- **`master`**: solo `KmilOPhg` puede hacer push; los demás deben abrir PR
+- **`dev`**: sin restricciones — colaboradores hacen pull/push aquí
