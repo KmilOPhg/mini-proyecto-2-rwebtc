@@ -1,6 +1,6 @@
 import type { Server as HttpServer } from "node:http";
 import type { Application } from "express";
-import { ExpressPeerServer, MessageType } from "peer";
+import { ExpressPeerServer } from "peer";
 import type { IClient, IMessage } from "peer";
 import {
   logIceError,
@@ -52,15 +52,11 @@ export function initPeerServer(httpServer: HttpServer, app: Application) {
     const type = message.type;
     logPeerMessage(peerId, type);
 
-    if (
-      type === MessageType.OFFER ||
-      type === MessageType.ANSWER ||
-      type === MessageType.CANDIDATE
-    ) {
+    if (type === "OFFER" || type === "ANSWER" || type === "CANDIDATE") {
       console.log(`[Peer] Signaling ${type} intercambiado para peer ${peerId}`);
     }
 
-    if (type === MessageType.ERROR) {
+    if (type === "ERROR") {
       const payload = message.payload ?? "Error desconocido";
       logPeerError(peerId, String(payload));
       if (/ice|candidate|stun|turn/i.test(String(payload))) {
