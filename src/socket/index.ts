@@ -9,6 +9,7 @@ import {
   logScreenStop,
 } from "../utils/signalingLogger.js";
 import { socketRoomName, verifySocketJwt } from "./auth.js";
+import { origenPermitido } from "../utils/corsOrigins.js";
 
 type SocketData = {
   uid: string;
@@ -33,13 +34,8 @@ const peersPorSala = new Map<string, Map<string, PeerEnSala>>();
 
 let ioInstance: Server | null = null;
 
-function normalizarOrigen(valor?: string): string {
-  return (valor || "").replace(/\/$/, "").toLowerCase();
-}
-
 function obtenerOrigenesPermitidos(): string[] {
   return [
-    process.env.FRONTEND_URL,
     "http://localhost:5173",
     "http://127.0.0.1:5173",
     "http://localhost:5174",
@@ -52,9 +48,7 @@ function obtenerOrigenesPermitidos(): string[] {
     "http://127.0.0.1:1206",
     "http://localhost:3002",
     "http://127.0.0.1:3002",
-  ]
-    .filter(Boolean)
-    .map((origen) => normalizarOrigen(origen));
+  ];
 }
 
 function obtenerErrorMensaje(err: unknown): string {
@@ -98,9 +92,7 @@ export function initSocketServer(httpServer: HttpServer): Server {
   const io = new Server(httpServer, {
     cors: {
       origin: (origin, callback) => {
-        if (!origin) return callback(null, true);
-        const permitidos = new Set(obtenerOrigenesPermitidos());
-        if (permitidos.has(normalizarOrigen(origin))) return callback(null, true);
+        if (origenPermitido(origin, obtenerOrigenesPermitidos())) return callback(null, true);
         return callback(new Error("No permitido por CORS"));
       },
       credentials: true,
