@@ -21,6 +21,7 @@ const localOrigins = [
   "http://127.0.0.1:1206",
   "http://localhost:3002",
   "http://127.0.0.1:3002",
+  "http://10.222.185.24:5173",
 ];
 
 app.use(
