@@ -5,7 +5,7 @@ import { initPeerServer } from "./peer/index.js";
 import { initSocketServer } from "./socket/index.js";
 import { logSignalingServerStart } from "./utils/signalingLogger.js";
 
-const port = process.env.PORT || 3002;
+const port = Number(process.env.PORT) || 3002;
 
 async function start() {
   const httpServer = createServer(app);
